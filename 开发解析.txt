@@ -1,6 +1,6 @@
 #XML 配置
 <action 
-id='Create' //相当于控制器  文件完整命名为 CreateAction.php
+id='Create' //相当于控制器  文件完整命名为 CreateAction.class.php
 type='rest' //为rest风格
 method='get' //请求方法为get方式 
 url='/comment/:id'  //url地址  
