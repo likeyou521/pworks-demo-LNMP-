@@ -10,8 +10,8 @@ url='/comment/:id'  //url地址
 
 方式    url地址             控制器         			    方法
 get   /comment/:id    CreateAction.class.php     before()   execute()  after()  
-							继承
-					  BaseAction.class.php
+				继承
+		      BaseAction.class.php
 #.htaccess
 
 rewrite ^/demo(/.*)$ /demo/index.php?actionId=restful&url=$1&$args&method=$request_method last;
