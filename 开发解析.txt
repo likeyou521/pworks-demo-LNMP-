@@ -1,0 +1,25 @@
+#XML 配置
+<action 
+id='Create' //相当于控制器  文件完整命名为 CreateAction.php
+type='rest' //为rest风格
+method='get' //请求方法为get方式 
+url='/comment/:id'  //url地址  
+/>
+
+相当于路由
+
+方式    url地址             控制器         			    方法
+get   /comment/:id    CreateAction.class.php     before()   execute()  after()  
+							继承
+					  BaseAction.class.php
+#.htaccess
+
+rewrite ^/demo(/.*)$ /demo/index.php?actionId=restful&url=$1&$args&method=$request_method last;
+
+^/demo(/.*)$		[正则匹配 加小括号表示 无限的 /a/b/c/......]
+
+//匹配到的地址会到这个地方
+/demo/index.php?actionId=restful&url=$1&$args&method=$request_method last;
+相当于
+/demo/index.php?url=/comment/1&method=get
+
