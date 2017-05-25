@@ -1,6 +1,6 @@
 
 LNMP集成环境下pworks环境配置  如何运行起来demo 文件
-wwwroot
+    wwwroot
 	├default
 		├wosunny.test
 			├── demo
@@ -16,8 +16,8 @@ wwwroot
 			└── tests
 			└── .user.ini
 -------------------------------------------------------------------------------------
-#需要的扩展有dom apcu  mcrypt mbstring
-扩展下载网站：http://pecl.php.net/
+#需要的php扩展有dom apcu  mcrypt mbstring
+php扩展下载网站：http://pecl.php.net/
 安装扩展方法（以下为示例安装apc扩展）：
 	# wget http://pecl.php.net/get/APC-3.1.13.tgz
 	# tar zxf APC-3.1.13.tgz
