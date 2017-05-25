@@ -1,2 +1,107 @@
 # pworks-demo-LNMP-
 pworks  demo LNMP配置
+
+
+LNMP集成环境下pworks环境配置  如何运行起来demo 文件
+wwwroot
+	├default
+		├wosunny.test
+			├── demo
+			│   ├── action
+			│   │   ├── GetInfoAction.class.php
+			│   │   └── Test.class.php
+			│   ├── index.php
+			│   ├── pworks.inc.php
+			│   ├── pworks.xml
+			│   
+			├── .htaccess
+			├── test.php
+			└── tests
+			└── .user.ini
+-------------------------------------------------------------------------------------
+#需要的扩展有dom apcu  mcrypt mbstring
+扩展下载网站：http://pecl.php.net/
+安装扩展方法（以下为示例安装apc扩展）：
+	# wget http://pecl.php.net/get/APC-3.1.13.tgz
+	# tar zxf APC-3.1.13.tgz
+	# cd APC-3.1.13/
+	# /usr/local/php/bin/phpize
+	# ./configure --enable-apc --enable-apc-mmap --with-php-config=/usr/local/php/bin/php-config
+	# make
+	# make install
+	
+	安装成功后.
+	打开php.ini
+	查找extension_dir 并在下面添加一行extension = "apc.so" 重启服务器 lnmp restart
+-------------------------------------------------------------------------------------	
+#添加域名66park.net 域名指向目录为/home/wwwroot/default/wosunny.test
+-------------------------------------------------------------------------------------
+#报错 
+	Warning: require_once(pworks/pworks.php): failed to open stream: No such file or directory in /home/wwwroot/default/wosunny.test/demo/index.php on line 28
+
+	Fatal error: require_once(): Failed opening required 'pworks/pworks.php' (include_path='.:/usr/local/php/lib/php') in /home/wwwroot/default/wosunny.test/demo/index.php on line 28
+
+	*解决方法 在index.php入口设置include_path的路径
+		# 处理默认的lib目录
+			set_include_path(get_include_path().PATH_SEPARATOR.'/usr/local/php/lib/php/PEAR'.PATH_SEPARATOR.APP_    ROOT);
+		*Tips:
+			将pworks框架 放到目录 /usr/local/php/lib/php/PEAR   
+-------------------------------------------------------------------------------------
+#报错
+	Warning: require_once(): open_basedir restriction in effect. File(/usr/local/php/lib/php/PEAR/pworks/pworks.php) is not within the allowed path(s): (/home/wwwroot/default/wosunny.test) in /home/wwwroot/default/wosunny.test/demo/index.php on line 28
+
+	Warning: require_once(/usr/local/php/lib/php/PEAR/pworks/pworks.php): failed to open stream: Operation not permitted in /home/wwwroot/default/wosunny.test/demo/index.php on line 28
+
+	Fatal error: require_once(): Failed opening required 'pworks/pworks.php' (include_path='.:/usr/local/php/lib/php:/usr/local/php/lib/php/PEAR:/home/wwwroot/default/wosunny.test/demo') in /home/wwwroot/default/wosunny.test/demo/index.php on line 28
+
+	*解决方法 将open_basedir置为空 open_basedir =
+		一般LNMP集成环境配置域名会自动生成.user.ini(内容为 open_basedir = 域名指向文件夹的路径)  这是个锁定的文件 需要root用户解锁 
+			chattr -i .user.ini
+		然后修改 open_basedir = 
+		加锁：chattr +i .user.ini
+-----------------------------------------------------------------------------------------
+#报错
+	Deprecated: Methods with the same name as their class will not be constructors in a future version of PHP; SystemException has a deprecated constructor in /usr/local/php/lib/php/PEAR/pworks/common/exception/SystemException.class.php on line 32
+
+	*此报错会出现在PHP7中 PHP7规定 方法名 和 类名不能相同
+	*解决办法：
+		 把与类名相同的方法名 改为构造函数 __construct
+		 例如：
+		 	public function SystemException(){} 改为
+		 	public function __construct(){}
+-----------------------------------------------------------------------------------------
+
+/usr/local/nginx/conf/nginx.conf 里多了一项 include vhost/*.conf;
+所以在/usr/local/nginx/conf/vhost目录下 可以配置nginx 格式为  域名.conf	
+
+LNMP的域名配置目录为 /usr/local/nginx/conf/vhost/66park.net.conf 		
+server
+    {
+        listen 80; 
+        #listen [::]:80;
+        server_name 66park.net; //配置的域名
+        index index.html index.htm index.php default.html default.htm default.php;
+        root  /home/wwwroot/default/wosunny.test;    //域名指向的目录
+		include /home/wwwroot/default/wosunny.test/.htaccess;	 //包含该域名的重写规则 这个是后加上去的  第一次自动设置域名配置没这个东西
+
+        include other.conf;
+        #error_page   404   /404.html;
+        include enable-php.conf;
+
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+        {
+            expires      30d;
+        }
+
+        location ~ .*\.(js|css)?$
+        {
+            expires      12h;
+        }
+
+        location ~ /\.
+        {
+            deny all;
+        }
+
+        access_log  /home/wwwlogs/66park.net.log;
+    }
