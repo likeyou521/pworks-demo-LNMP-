@@ -41,8 +41,15 @@ php扩展下载网站：http://pecl.php.net/
 	*解决方法 在index.php入口设置include_path的路径
 		# 处理默认的lib目录
 			set_include_path(get_include_path().PATH_SEPARATOR.'/usr/local/php/lib/php/PEAR'.PATH_SEPARATOR.APP_    ROOT);
-		*Tips:
+		*Tip1:
 			将pworks框架 放到目录 /usr/local/php/lib/php/PEAR   
+		*Tip2:
+			pworks放到任意目录 例如：/home/wwwroot/default/API/markapi/pear
+			修改php.ini 添加
+				; UNIX: "/path1:/path2"
+				;include_path = ".:/php/includes"
+				include_path = ".:/home/wwwroot/default/API/markapi/pear"
+			 重启lnmp
 -------------------------------------------------------------------------------------
 #报错
 	Warning: require_once(): open_basedir restriction in effect. File(/usr/local/php/lib/php/PEAR/pworks/pworks.php) is not within the allowed path(s): (/home/wwwroot/default/wosunny.test) in /home/wwwroot/default/wosunny.test/demo/index.php on line 28
