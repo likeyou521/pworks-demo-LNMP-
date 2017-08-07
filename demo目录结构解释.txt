@@ -26,7 +26,7 @@ php扩展下载网站：http://pecl.php.net/
 	# ./configure --enable-apc --enable-apc-mmap --with-php-config=/usr/local/php/bin/php-config
 	# make
 	# make install
-	
+http://blog.csdn.net/qdujunjie/article/details/38415033	
 	安装成功后.
 	打开php.ini
 	查找extension_dir 并在下面添加一行extension = "apc.so" 重启服务器 lnmp restart
